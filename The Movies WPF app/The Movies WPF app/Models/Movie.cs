@@ -18,7 +18,7 @@ namespace The_Movies_WPF_app.Models
         Other
     }
 
-    internal class Movie
+    public class Movie
     {
         public string Title { get; set; }
         public TimeSpan RunTime { get; set; }
