@@ -8,9 +8,12 @@ namespace Test
         [TestMethod]
         public void ShouldAddMovieToList()
         {
+            /*
+             I should add a mock to test on, so I don't change the data in the file by accident.
+
             // Arrange
           
-            /* var viewModel = new MainViewModel(); //We need a viewmodel with this name, for this to work.
+            var viewModel = new MainViewModel(); //We need a viewmodel with this name, for this to work.
             viewModel.Titel = "Test Movie";
             viewModel.RunTime = new TimeSpan(1, 1, 1); // Runtime: 1 Hr, 1 minute, 1 second.
             viewModel.MovieGenre = MovieGenre.Horror; // Adding the genre "Horror" 
@@ -18,7 +21,13 @@ namespace Test
             // if we want to add multiple genres:
             // We need to make a list in our viewmodel named MovieGenres first.
             // viewModel.MovieGenres.Add(MovieGenre.Action);
-            //viewModel.MovieGenres.Add(MovieGenre.Comedy);
+            //viewModel.MovieGenres.Add(MovieGenre.Comedy); 
+
+            // Act
+
+            // Assert
+
+           
 
 */
         }
