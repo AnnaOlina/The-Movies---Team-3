@@ -1,47 +1,60 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using The_Movies_WPF_app.Models;
 
 namespace The_Movies_WPF_app.Repositories
 {
-    // Definerer offentlig klasse, som overholder IMovieRepository
     public class FileMovieRepository : IMovieRepository
     {
-        // Opretter en privat variabel _filePath, som er 'readonly' (værdi kan kun tildeles én gang)
         private readonly string _filePath;
-        // Konstruktør, der kører, når et nyt objekt af klassen skabes, om som definerer filstien
-        public FileMovieRepository()
+
+        public FileMovieRepository(string? filePath = null)
         {
-            string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            _filePath = Path.Combine(documentsPath, "movies.txt");
+            // Default fildestination: <AppBase>/Data/movies.csv
+            var baseDir = AppContext.BaseDirectory;
+            var dataDir = Path.Combine(baseDir, "Data");
+            Directory.CreateDirectory(dataDir);
+
+            _filePath = filePath ?? Path.Combine(dataDir, "movies.csv");
+
+            // Tjekker om fil findes. Hvis ikke, oprettes tom fil
+            if (!File.Exists(_filePath))
+            {
+                File.WriteAllText(_filePath, string.Empty);
+            }
+        }
+
+        public IEnumerable<Movie> GetAllMovies()
+        {
+            // Indlæs linjer. Spring over tomme linjer.
+            foreach (var line in File.ReadLines(_filePath))
+            {
+                if (string.IsNullOrWhiteSpace(line))
+                    continue;
+
+                // Forsøger at konvertere linjen til et Movie-objekt via Movie.FromString
+                Movie? movie = null;
+                try
+                {
+                    movie = Movie.FromString(line);
+                }
+                catch
+                {
+                    continue; // Forkert format = Linje springes over
+                }
+
+                if (movie != null)
+                    yield return movie;
+            }
         }
 
         public void AddMovie(Movie movie)
         {
-            string lineToWrite = movie.ToString() + Environment.NewLine;
-            File.AppendAllText(_filePath, lineToWrite);
-        }
-        // Metode, der henter alle Movie-objekter
-        public IEnumerable<Movie> GetAllMovies()
-        {
-            // Hvis filen ikke eksisterer, skabes og returneres tom liste
-            if (!File.Exists(_filePath))
-            {
-                return Enumerable.Empty<Movie>();
-            }
+            if (movie is null) throw new ArgumentNullException(nameof(movie));
 
-            string[] movieLines = File.ReadAllLines(_filePath);
-            var movies = new List<Movie>();
-
-            foreach (string line in movieLines)
-            {
-                if (string.IsNullOrWhiteSpace(line))
-                {
-                    continue;
-                }
-                Movie movie = Movie.FromString(line);
-                movies.Add(movie);
-            }
-            return movies;
+            // Appenderer ét Movie-objekt til hukommelsen. 
+            File.AppendAllText(_filePath, movie.ToString() + Environment.NewLine);
         }
     }
 }
