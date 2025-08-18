@@ -1,0 +1,118 @@
+﻿<Window x:Class="The_Movies_WPF_app.Views.RegisterMovieView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:The_Movies_WPF_app.Views"
+        mc:Ignorable="d"
+        SizeToContent="WidthAndHeight"
+        ResizeMode="CanMinimize">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Overskrift -->
+            <RowDefinition Height="Auto"/>
+            <!-- Formular -->
+            <RowDefinition Height="Auto"/>
+            <!-- Genrer -->
+            <RowDefinition Height="Auto"/>
+            <!-- Knapper -->
+        </Grid.RowDefinitions>
+
+        <!-- Overskrift -->
+        <TextBlock Text="Registrer film" FontSize="18" FontWeight="Bold" Grid.Row="0" Margin="0,0,0,20"/>
+
+        <!-- Formular: Titel og Varighed -->
+        <Grid Grid.Row="1" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <!-- Separator før Titel -->
+                <RowDefinition Height="Auto"/>
+                <!-- Titel -->
+                <RowDefinition Height="Auto"/>
+                <!-- Varighed -->
+                <RowDefinition Height="Auto"/>
+                <!-- Separator efter Varighed -->
+            </Grid.RowDefinitions>
+
+            <!-- Separator før Titel -->
+            <Separator Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,10" Background="#CCCCCC" Height="1"/>
+
+            <!-- Titel -->
+            <TextBlock Text="Titel:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,5" FontWeight="Bold"/>
+            <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" 
+            Grid.Row="1" Grid.Column="1" Width="300" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+
+            <!-- Varighed -->
+            <TextBlock Text="Varighed (min):" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,5" FontWeight="Bold"/>
+            <TextBox Text="{Binding DurationMinutes, UpdateSourceTrigger=PropertyChanged}" 
+                     Grid.Row="2" Grid.Column="1" Width="100" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+
+
+            <!-- Separator efter Varighed -->
+            <Separator Grid.Row="3" Grid.ColumnSpan="2" Margin="0,10,0,0" Background="#CCCCCC" Height="1"/>
+        </Grid>
+
+        <!-- Filmgenre med CheckBox -->
+        <Grid Grid.Row="2" Margin="0,0,0,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <!-- Label -->
+                <RowDefinition Height="Auto"/>
+                <!-- Genre-boks -->
+            </Grid.RowDefinitions>
+
+            <!-- Genre label -->
+            <TextBlock Text="Genre:" Grid.Row="0" FontWeight="Bold" Margin="0,0,0,5"/>
+
+            <!-- Genre-boks -->
+            <Border Grid.Row="1"
+                    Background="#FFFBFAFA"
+                    CornerRadius="5"
+                    Padding="10"
+                    BorderBrush="#CCCCCC"
+                    BorderThickness="2"
+                    MinHeight="100"
+                    MaxWidth="400"
+                    MaxHeight="200">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding AvailableGenres}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="3"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected, Mode=TwoWay}" Margin="5"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+
+        <!-- Knapper -->
+        <StackPanel Grid.Row="3" Orientation="Vertical" HorizontalAlignment="Right" Margin="0,20,0,0" Width="180">
+            <!-- Knapper -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Ryd" Width="80" Margin="0,0,10,0" Command="{Binding ClearCommand}"/>
+                <Button Content="Opret" Width="80" Command="{Binding RegisterMovieCommand}"/>
+            </StackPanel>
+
+            <!-- Fejlbesked -->
+            <TextBlock Text="{Binding ValidationMessage}"
+               Foreground="Red"
+               FontStyle="Italic"
+               Margin="0,5,0,0"
+               TextWrapping="Wrap"
+               HorizontalAlignment="Right"/>
+        </StackPanel>
+    </Grid>
+</Window>
