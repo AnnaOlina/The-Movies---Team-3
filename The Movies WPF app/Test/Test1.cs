@@ -26,20 +26,20 @@ namespace Test
             // Selecting multiple genres from list: (Horror and Action)
             foreach (var genreItem in viewModel.AvailableGenres)
             {
-            if (genreItem.Genre==MovieGenre.Horror)
-            genreItem.IsSelected= true;
+                if (genreItem.Genre==MovieGenre.Horror)
+                genreItem.IsSelected = true;
 
-            if (genreItem.Genre==MovieGenre.Action)
-            genreItem.IsSelected= true;
+                if (genreItem.Genre==MovieGenre.Action)
+                genreItem.IsSelected = true;
             }
 
 
             // Act
-            viewModel.AddMovieCommand.Execute(null);
+            viewModel.RegisterMovieCommand.Execute(null);
 
             // Assert
             Assert.AreEqual(1, viewModel.Movies.Count);
-            var addedMovie = viewModel.Movies[0]
+            var addedMovie = viewModel.Movies[0];
             Assert.AreEqual("Test Movie", addedMovie.Title);
             Assert.AreEqual(200, addedMovie.DurationMinutes);
            
