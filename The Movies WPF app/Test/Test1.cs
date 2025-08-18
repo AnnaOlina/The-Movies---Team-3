@@ -10,7 +10,7 @@ namespace Test
         public void RegisterMovieCommand_ShouldAddMovieToList()
         {
             /*
-             //Det her er alt sammen ud fra eksemplet i MVVM læringsprojektet. Den burde bare teste om vores command "AddMovieCommand" (eller hvad den kommer til at hedde) gør det den skal.
+             //Det her er primært fra eksemplet i MVVM læringsprojektet. Den burde bare teste om vores command "RegisterMovieCommand" gør det den skal.
              //Vi skal have en liste af genre i Movie før den kan virke.
 
             // Arrange
