@@ -5,29 +5,47 @@ namespace Test
     [TestClass]
     public sealed class Test1
     {
+       
         [TestMethod]
-        public void ShouldAddMovieToList()
+        public void RegisterMovieCommand_ShouldAddMovieToList()
         {
             /*
-             I should add a mock to test on, so I don't change the data in the file by accident.
+             //Det her er alt sammen ud fra eksemplet i MVVM læringsprojektet. Den burde bare teste om vores command "AddMovieCommand" (eller hvad den kommer til at hedde) gør det den skal.
+             //Vi skal have en liste af genre i Movie før den kan virke.
 
             // Arrange
+
           
-            var viewModel = new MainViewModel(); //We need a viewmodel with this name, for this to work.
-            viewModel.Titel = "Test Movie";
-            viewModel.RunTime = new TimeSpan(1, 1, 1); // Runtime: 1 Hr, 1 minute, 1 second.
-            viewModel.MovieGenre = MovieGenre.Horror; // Adding the genre "Horror" 
+            var viewModel = new RegisterMovieViewModel(new FakeMovieRepository()); //For at lave en "mock" så testen ikke tilføjer en film til den rigtige liste)
+            
+
+            viewModel.Title = "Test Movie";
+            viewModel.DurationMinutes = 200;
            
-            // if we want to add multiple genres:
-            // We need to make a list in our viewmodel named MovieGenres first.
-            // viewModel.MovieGenres.Add(MovieGenre.Action);
-            //viewModel.MovieGenres.Add(MovieGenre.Comedy); 
+           
+            // Selecting multiple genres from list: (Horror and Action)
+            foreach (var genreItem in viewModel.AvailableGenres)
+            {
+            if (genreItem.Genre==MovieGenre.Horror)
+            genreItem.IsSelected= true;
+
+            if (genreItem.Genre==MovieGenre.Action)
+            genreItem.IsSelected= true;
+            }
+
 
             // Act
+            viewModel.AddMovieCommand.Execute(null);
 
             // Assert
-
+            Assert.AreEqual(1, viewModel.Movies.Count);
+            var addedMovie = viewModel.Movies[0]
+            Assert.AreEqual("Test Movie", addedMovie.Title);
+            Assert.AreEqual(200, addedMovie.DurationMinutes);
            
+            //with several MovieGenres from a list: CollectionAssert.Contains to checkfor each MovieGenre.
+            CollectionAssert.Contains(addedMovie.MovieGenres, MovieGenre.Horror);
+            CollectionAssert.Contains(addedMovie.MovieGenres, MovieGenre.Action);
 
 */
         }
