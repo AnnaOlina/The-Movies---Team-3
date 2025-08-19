@@ -9,6 +9,7 @@ namespace The_Movies_WPF_app.Repositories
     {
         private readonly string _filePath;
 
+        // Konstruktør
         public FileMovieRepository(string? filePath = null)
         {
             // Default fildestination: <AppBase>/Data/movies.csv
@@ -27,33 +28,20 @@ namespace The_Movies_WPF_app.Repositories
 
         public IEnumerable<Movie> GetAllMovies()
         {
-            // Indlæs linjer. Spring over tomme linjer.
+            // Indlæs linjer
             foreach (var line in File.ReadLines(_filePath))
             {
-                if (string.IsNullOrWhiteSpace(line))
-                    continue;
-
-                // Forsøger at konvertere linjen til et Movie-objekt via Movie.FromString
-                Movie? movie = null;
-                try
-                {
-                    movie = Movie.FromString(line);
-                }
-                catch
-                {
-                    continue; // Forkert format = Linje springes over
-                }
-
-                if (movie != null)
-                    yield return movie;
+                yield return Movie.FromString(line);
             }
         }
 
+
         public void AddMovie(Movie movie)
         {
+            // Tjekker for null-reference
             if (movie is null) throw new ArgumentNullException(nameof(movie));
 
-            // Appenderer ét Movie-objekt til hukommelsen. 
+            // Appenderer ét Movie-objekt til hukommelsen
             File.AppendAllText(_filePath, movie.ToString() + Environment.NewLine);
         }
     }

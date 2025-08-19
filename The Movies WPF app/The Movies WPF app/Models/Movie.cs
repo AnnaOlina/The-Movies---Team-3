@@ -27,7 +27,7 @@ namespace The_Movies_WPF_app.Models
         public const char FieldSeparator = ';';
         public const char GenreSeparator = '|';
 
-        // Domænefelter
+        // Properties
         public string Title { get; set; }
         public TimeSpan RunTime { get; set; }
         public List<MovieGenre> Genres { get; set; }
@@ -35,14 +35,6 @@ namespace The_Movies_WPF_app.Models
         // Konstruktør
         public Movie(string title, TimeSpan runTime, IEnumerable<MovieGenre> genres)
         {
-            // Validering af felter
-            if (string.IsNullOrWhiteSpace(title))
-                throw new ArgumentException("Title må ikke være tom.", nameof(title));
-            if (runTime < TimeSpan.Zero)
-                throw new ArgumentOutOfRangeException(nameof(runTime), "RunTime må ikke være negativ.");
-            if (genres is null)
-                throw new ArgumentNullException(nameof(genres), "Genres må ikke være null.");
-
             Title = title;
             RunTime = runTime;
             Genres = genres.ToList();
@@ -56,7 +48,7 @@ namespace The_Movies_WPF_app.Models
         {
             // Lagrer runtime som hele minutter
             var minutes = ((int)Math.Round(RunTime.TotalMinutes, MidpointRounding.AwayFromZero))
-                          .ToString(CultureInfo.InvariantCulture); // Håndterer decimaltal
+                .ToString(CultureInfo.InvariantCulture); // Håndterer decimaltal
 
             // Saml flere genrer til en string
             var genresJoined = string.Join(GenreSeparator, Genres);
@@ -67,41 +59,24 @@ namespace The_Movies_WPF_app.Models
 
         public static Movie FromString(string line)
         {
-            // Validering af format
-            if (string.IsNullOrWhiteSpace(line))
-                throw new ArgumentException("Linjen er tom.", nameof(line));
-
+            // Splitter hele linjen op i felter adskilt af FieldSeparator
             var parts = line.Split(FieldSeparator);
-            if (parts.Length < 3)
-                throw new FormatException("Forventet format: Title;RunTimeMinutes;Genres");
 
-            var titleRaw = parts[0].Trim();
-            if (string.IsNullOrWhiteSpace(titleRaw))
-                throw new FormatException("Title må ikke være tom.");
-
-            if (!int.TryParse(parts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out var minutes))
-                throw new FormatException("RunTimeMinutes skal være et heltal.");
-
+            var title = parts[0];
+            var minutes = int.Parse(parts[1], CultureInfo.InvariantCulture);
             var runTime = TimeSpan.FromMinutes(minutes);
-
-            // Parse genrer (skal indeholde mindst én)
+            // Liste af genrer, adskilt af GenreSeparator
             var genres = new List<MovieGenre>();
-            var genresCell = parts[2];
 
-            if (string.IsNullOrWhiteSpace(genresCell))
-                throw new FormatException("Genres-feltet må ikke være tomt.");
-
-            foreach (var token in genresCell.Split(GenreSeparator, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+            foreach (var token in parts[2].Split(GenreSeparator))
             {
-                if (!Enum.TryParse<MovieGenre>(token, ignoreCase: true, out var g))
-                    throw new FormatException($"Ukendt genre: {token}");
+                // Parser hver genre fra tekst til enum-værdi
+                var g = Enum.Parse<MovieGenre>(token, true);
                 genres.Add(g);
             }
 
-            if (genres.Count == 0)
-                throw new FormatException("Genres-feltet skal indeholde mindst én gyldig genre.");
-
-            return new Movie(titleRaw, runTime, genres);
+            // Opretter og returnerer et nyt Movie-objekt
+            return new Movie(title, runTime, genres);
         }
     }
 }
