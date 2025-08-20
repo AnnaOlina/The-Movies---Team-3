@@ -50,7 +50,7 @@
 
             <!-- Varighed -->
             <TextBlock Text="Varighed (min):" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,5" FontWeight="Bold"/>
-            <TextBox Text="{Binding DurationMinutes, UpdateSourceTrigger=PropertyChanged}" 
+            <TextBox Text="{Binding DurationMinutesText, UpdateSourceTrigger=PropertyChanged}" 
                      Grid.Row="2" Grid.Column="1" Width="100" VerticalAlignment="Top" HorizontalAlignment="Left"/>
 
 
