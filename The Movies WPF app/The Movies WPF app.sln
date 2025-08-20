@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.36105.23 d17.13
+VisualStudioVersion = 17.13.36105.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "The Movies WPF app", "The Movies WPF app\The Movies WPF app.csproj", "{1EC8588B-BC1A-438D-A505-24FEB724040D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{438C6DC8-1654-4F86-A2E1-DA341FB7FC8C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{1EC8588B-BC1A-438D-A505-24FEB724040D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1EC8588B-BC1A-438D-A505-24FEB724040D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1EC8588B-BC1A-438D-A505-24FEB724040D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{438C6DC8-1654-4F86-A2E1-DA341FB7FC8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{438C6DC8-1654-4F86-A2E1-DA341FB7FC8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{438C6DC8-1654-4F86-A2E1-DA341FB7FC8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{438C6DC8-1654-4F86-A2E1-DA341FB7FC8C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
