@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using The_Movies_WPF_app.ViewModels;
+using The_Movies_WPF_app.Repositories;
 
 namespace The_Movies_WPF_app.Views
 {

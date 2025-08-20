@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using The_Movies_WPF_app.Commands;
 using The_Movies_WPF_app.Models;
+using The_Movies_WPF_app.Helpers;
+using The_Movies_WPF_app.Repositories;
 
 namespace The_Movies_WPF_app.ViewModels
 {
@@ -18,7 +20,7 @@ namespace The_Movies_WPF_app.ViewModels
 
         // Felter
         private string _title;
-        private int _durationMinutes;
+        private string _durationMinutesText;
         private string _validationMessage;
 
         // PropertyChanged event til databinding
@@ -54,16 +56,16 @@ namespace The_Movies_WPF_app.ViewModels
             }
         }
 
-        // Varighed i minutter
-        public int DurationMinutes
+        // Varighed i minutter (string, for bedre validering)
+        public string DurationMinutesText
         {
-            get => _durationMinutes;
+            get => _durationMinutesText;
             set
             {
-                if (_durationMinutes != value)
+                if (_durationMinutesText != value)
                 {
-                    _durationMinutes = value;
-                    OnPropertyChanged(nameof(DurationMinutes));
+                    _durationMinutesText = value;
+                    OnPropertyChanged(nameof(DurationMinutesText));
                     (RegisterMovieCommand as RelayCommand)?.RaiseCanExecuteChanged();
                 }
             }
@@ -127,8 +129,10 @@ namespace The_Movies_WPF_app.ViewModels
         // Validering til registrering af film
         private bool CanRegisterMovie(object parameter)
         {
+            bool isValidDuration = int.TryParse(DurationMinutesText, out int minutes) && minutes > 0;
+
             return !string.IsNullOrWhiteSpace(Title) &&
-                   DurationMinutes > 0 &&
+                   isValidDuration &&
                    AvailableGenres.Any(g => g.IsSelected) &&
                    !Movies.Any(m => string.Equals(m.Title.Trim(), Title.Trim(), StringComparison.OrdinalIgnoreCase));
         }
@@ -136,12 +140,13 @@ namespace The_Movies_WPF_app.ViewModels
         // Registrer ny film
         private void RegisterMovie(object parameter)
         {
+            int minutes = int.Parse(DurationMinutesText);
             var selectedGenres = AvailableGenres
                 .Where(g => g.IsSelected)
                 .Select(g => g.Genre)
                 .ToList();
 
-            var movie = new Movie(Title, TimeSpan.FromMinutes(DurationMinutes), selectedGenres);
+            var movie = new Movie(Title, TimeSpan.FromMinutes(minutes), selectedGenres);
 
             _movieRepository.AddMovie(movie);
             Movies.Add(movie); // vigtigt for validering, hvis man skal tilføje en film mere. Tilføjer film til ObservableCollection.
@@ -153,7 +158,7 @@ namespace The_Movies_WPF_app.ViewModels
         private void ClearForm(object parameter)
         {
             Title = string.Empty;
-            DurationMinutes = 0;
+            DurationMinutesText = null;
             foreach (var genre in AvailableGenres)
                 genre.IsSelected = false;
 
@@ -163,29 +168,5 @@ namespace The_Movies_WPF_app.ViewModels
         // Notificer UI om ændringer
         protected void OnPropertyChanged(string propertyName) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    // Hjælpeklasse til genrevalg
-    public class GenreItem : INotifyPropertyChanged
-    {
-        private bool _isSelected;
-
-        public string Name { get; set; }
-        public MovieGenre Genre { get; set; }
-
-        public bool IsSelected
-        {
-            get => _isSelected;
-            set
-            {
-                if (_isSelected != value)
-                {
-                    _isSelected = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsSelected)));
-                }
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 }
