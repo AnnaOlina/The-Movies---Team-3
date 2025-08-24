@@ -17,6 +17,7 @@ namespace The_Movies_WPF_app.Models
         public string CinemaName { get; set; }
         public string Location { get; set; }
 
+        // Konstruktør
         public Cinema(Guid cinemaId, string cinemaName, string location)
         {
             if (cinemaId == Guid.Empty) throw new ArgumentException("CinemaId cannot be empty.");
