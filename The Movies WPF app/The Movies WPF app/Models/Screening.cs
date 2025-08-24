@@ -11,9 +11,7 @@ namespace The_Movies_WPF_app.Models
     {
         // Definition af separatorformater
         public const char FieldSeparator = ';';
-        private TimeSpan movieDuration;
-        private TimeOnly movieId;
-
+       
         // Properties
         public Guid ScreeningId { get; set; }
         public DateOnly Date { get; set; }
@@ -52,8 +50,9 @@ namespace The_Movies_WPF_app.Models
         {
             if (string.IsNullOrEmpty(line))
                 throw new ArgumentNullException(nameof(line), "Input line cannot be null or empty.");
+
             if (runTime <= TimeSpan.Zero)
-                throw new ArgumentException("RunTime must be positive.", nameof(movieDuration));
+                throw new ArgumentException("RunTime must be positive.", nameof(runTime));
 
             var parts = line.Split(FieldSeparator);
             if (parts.Length != 5)
