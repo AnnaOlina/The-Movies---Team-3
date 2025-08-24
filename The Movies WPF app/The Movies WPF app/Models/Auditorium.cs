@@ -30,7 +30,10 @@ namespace The_Movies_WPF_app.Models
 
         public override string ToString()
         {
-            return $"{AuditoriumId}{FieldSeparator}{AuditoriumNumber}{FieldSeparator}{CinemaId}";
+            return string.Join(FieldSeparator,
+                AuditoriumId.ToString("D", CultureInfo.InvariantCulture),
+                AuditoriumNumber.ToString(CultureInfo.InvariantCulture),
+                CinemaId.ToString("D", CultureInfo.InvariantCulture));
         }
 
         public static Auditorium FromString(string line)
