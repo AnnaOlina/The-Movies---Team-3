@@ -12,14 +12,11 @@ namespace The_Movies_WPF_app.Repositories
         // Konstruktør
         public FileMovieRepository(string? filePath = null)
         {
-            // Default fildestination: <AppBase>/Data/movies.csv
+            // Gemmer i base directory som "movies.csv"
             var baseDir = AppContext.BaseDirectory;
-            var dataDir = Path.Combine(baseDir, "Data");
-            Directory.CreateDirectory(dataDir);
+            _filePath = filePath ?? Path.Combine(baseDir, "movies.csv");
 
-            _filePath = filePath ?? Path.Combine(dataDir, "movies.csv");
-
-            // Tjekker om fil findes. Hvis ikke, oprettes tom fil
+            // Opretter filen hvis den ikke findes
             if (!File.Exists(_filePath))
             {
                 File.WriteAllText(_filePath, string.Empty);
@@ -41,8 +38,16 @@ namespace The_Movies_WPF_app.Repositories
             // Tjekker for null-reference
             if (movie is null) throw new ArgumentNullException(nameof(movie));
 
-            // Appenderer ét Movie-objekt til hukommelsen
+            // Appenderer ét Movie-objekt til filen
             File.AppendAllText(_filePath, movie.ToString() + Environment.NewLine);
+        }
+
+        // Ekstra metode til at få et Dictionary af MovieId og RunTime. Skal bruges i ScreeningRepository
+        public Dictionary<Guid, TimeSpan> GetMovieRunTimes()
+        {
+            return GetAllMovies()
+                .Where(m => m.MovieId != Guid.Empty && m.RunTime > TimeSpan.Zero)
+                .ToDictionary(m => m.MovieId, m => m.RunTime);
         }
     }
 }

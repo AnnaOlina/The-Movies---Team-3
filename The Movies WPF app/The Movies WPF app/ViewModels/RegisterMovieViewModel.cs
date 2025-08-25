@@ -22,6 +22,8 @@ namespace The_Movies_WPF_app.ViewModels
         private string _title;
         private string _durationMinutesText;
         private string _validationMessage;
+        private string _director;
+        private DateTime _premiereDate=DateTime.Today;
 
         // PropertyChanged event til databinding
         public event PropertyChangedEventHandler PropertyChanged;
@@ -85,6 +87,38 @@ namespace The_Movies_WPF_app.ViewModels
             }
         }
 
+        // Instruktørens navn
+        public string Director
+        {
+            get => _director;
+            set
+            {
+                if (_director != value)
+                {
+                    _director = value;
+                    OnPropertyChanged(nameof(Director));
+                    (RegisterMovieCommand as RelayCommand)?.RaiseCanExecuteChanged();
+                }
+            }
+        }
+
+
+        // Premiere dato
+        public DateTime PremiereDate
+        {
+            get => _premiereDate;
+            set
+            {
+                if (_premiereDate != value)
+                {
+                    _premiereDate = value;
+                    OnPropertyChanged(nameof(PremiereDate));
+                    (RegisterMovieCommand as RelayCommand)?.RaiseCanExecuteChanged();
+                }
+            }
+        }
+
+
         // Liste over tilgængelige genrer (med checkbox)
         public ObservableCollection<GenreItem> AvailableGenres { get; }
 
@@ -131,10 +165,11 @@ namespace The_Movies_WPF_app.ViewModels
         {
             bool isValidDuration = int.TryParse(DurationMinutesText, out int minutes) && minutes > 0;
 
-            return !string.IsNullOrWhiteSpace(Title) &&
-                   isValidDuration &&
-                   AvailableGenres.Any(g => g.IsSelected) &&
-                   !Movies.Any(m => string.Equals(m.Title.Trim(), Title.Trim(), StringComparison.OrdinalIgnoreCase));
+            return  !string.IsNullOrWhiteSpace(Title) &&
+                    !string.IsNullOrWhiteSpace(Director) &&
+                    isValidDuration &&
+                    AvailableGenres.Any(g => g.IsSelected) &&
+                    !Movies.Any(m => string.Equals(m.Title.Trim(), Title.Trim(), StringComparison.OrdinalIgnoreCase));
         }
 
         // Registrer ny film
@@ -146,7 +181,13 @@ namespace The_Movies_WPF_app.ViewModels
                 .Select(g => g.Genre)
                 .ToList();
 
-            var movie = new Movie(Title, TimeSpan.FromMinutes(minutes), selectedGenres);
+            var movie = new Movie(
+                Guid.NewGuid(),
+                Title,
+                TimeSpan.FromMinutes(minutes),
+                selectedGenres,
+                Director,
+                PremiereDate);
 
             _movieRepository.AddMovie(movie);
             Movies.Add(movie); // vigtigt for validering, hvis man skal tilføje en film mere. Tilføjer film til ObservableCollection.
@@ -161,6 +202,9 @@ namespace The_Movies_WPF_app.ViewModels
             DurationMinutesText = null;
             foreach (var genre in AvailableGenres)
                 genre.IsSelected = false;
+
+            Director = string.Empty;
+            PremiereDate = DateTime.Today;
 
             (RegisterMovieCommand as RelayCommand)?.RaiseCanExecuteChanged();
         }
