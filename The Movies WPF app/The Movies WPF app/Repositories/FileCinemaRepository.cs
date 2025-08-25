@@ -87,7 +87,7 @@ namespace The_Movies_WPF_app.Repositories
             catch (Exception ex)
             {
                 // Håndterer andre uventede fejl
-                throw new Exception($"En uventet fejl opstod under tilføjelse af cinema: {cinema.Name}", ex);
+                throw new Exception($"En uventet fejl opstod under tilføjelse af cinema: {cinema.CinemaName}", ex);
             }
         }
     }

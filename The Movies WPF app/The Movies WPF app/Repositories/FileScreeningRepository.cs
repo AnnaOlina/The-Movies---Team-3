@@ -11,10 +11,13 @@ namespace The_Movies_WPF_app.Repositories
     public class FileScreeningRepository : IScreeningRepository
     {
         private readonly string _filePath;
+        private readonly IMovieRepository _movieRepository;
 
         //Konstruktør
-        public FileScreeningRepository(string? filePath = null)
+        public FileScreeningRepository(IMovieRepository movieRepository, string? filePath = null)
         {
+            _movieRepository = movieRepository ?? throw new ArgumentNullException(nameof(movieRepository));
+
             var baseDir = AppContext.BaseDirectory;
             _filePath = filePath ?? Path.Combine(baseDir, "screenings.csv");
 
@@ -39,31 +42,43 @@ namespace The_Movies_WPF_app.Repositories
 
         public IEnumerable<Screening> GetAllScreenings()
         {
-            //Indlæs linjer én ad gangen og forsøger at konvertere til Screening-objekter
+            //Henter et Dictionary af MovieId og RunTime fra MovieRepository
+            var movieRunTimes = _movieRepository.GetMovieRunTimes();
+
+            //Indlæser linjer én ad gangen og konverterer til Screening-objekter
             foreach (var line in File.ReadLines(_filePath))
             {
                 // Ignorerer tomme eller whitespace-linjer
                 if (string.IsNullOrWhiteSpace(line))
                     continue;
 
-                // Initialiserer screening-variablen
+                // Splitter linjen og tjekker om den har det forventede antal felter og at movieId er gyldigt
+                var parts = line.Split(Screening.FieldSeparator);
+                if (parts.Length != 5 || !Guid.TryParse(parts[3], out var movieId))
+                    continue;
+
+                // Henter runTime for den givne movieId, hvis den findes
+                if (!movieRunTimes.TryGetValue(movieId, out var runTime))
+                    continue;
+
                 Screening? screening = null;
 
                 try
                 {
-                    //Forsøger at parse linjen til et Screening-objekt
-                    screening = Screening.FromString(line);
+                    //Opretter Screening-objektet med runtime
+                    screening = Screening.FromString(line, runTime);
                 }
                 catch (FormatException ex)
                 {
-                    // Håndterer formatfejl, f.eks. hvis linjen ikke kan parses korrekt
+                    // Håndterer formatfejl, fx hvis linjen ikke har det forventede format
                     throw new Exception($"Fejl ved parsing af screening-linje: '{line}'", ex);
                 }
-                //Returnerer screening-objektet, hvis parsin lykkedes.
+                // Returnerer screening-objektet hvis parsing lykkedes
                 if (screening != null)
                     yield return screening;
             }
         }
+
 
         public void AddScreening(Screening screening)
         {

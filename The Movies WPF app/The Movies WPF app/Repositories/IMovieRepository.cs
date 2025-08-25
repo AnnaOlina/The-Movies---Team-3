@@ -9,5 +9,7 @@ namespace The_Movies_WPF_app.Repositories
         IEnumerable<Movie> GetAllMovies();
         // Kontrakt for tilføjelse og persistering af ét Movie-objekt
         void AddMovie(Movie movie);
+        //Dictionary med MovieId-> RunTime
+        Dictionary<Guid, TimeSpan> GetMovieRunTimes();
     }
 }

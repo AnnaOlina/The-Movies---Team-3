@@ -28,7 +28,7 @@ namespace The_Movies_WPF_app.Models
         public const char GenreSeparator = '|';
 
         // Properties
-        public Guid MovieID { get; }
+        public Guid MovieId { get; }
         public string Title { get; set; }
         public TimeSpan RunTime { get; set; }
         public List<MovieGenre> Genres { get; set; }
@@ -38,7 +38,7 @@ namespace The_Movies_WPF_app.Models
         // Konstruktør
         public Movie(Guid movieID, string title, TimeSpan runTime, List<MovieGenre> genres, string director, DateTime premiereDate)
         {
-            MovieID = movieID;
+            MovieId = movieID;
             Title = title;
             RunTime = runTime;
             Genres = genres.ToList();
@@ -60,7 +60,7 @@ namespace The_Movies_WPF_app.Models
 
             // Bygger linje, der skal gemmes i fil
             return string.Join(FieldSeparator,
-            MovieID.ToString(),
+            MovieId.ToString(),
             Title,
             minutes,
             genresJoined,
@@ -73,7 +73,7 @@ namespace The_Movies_WPF_app.Models
             // Splitter hele linjen op i felter adskilt af FieldSeparator
             var parts = line.Split(FieldSeparator);
 
-            var movieID = Guid.Parse(parts[0]);
+            var movieId = Guid.Parse(parts[0]);
             var title = parts[1];
             var minutes = int.Parse(parts[2], CultureInfo.InvariantCulture);
             var runTime = TimeSpan.FromMinutes(minutes);
@@ -88,7 +88,7 @@ namespace The_Movies_WPF_app.Models
             var premiereDate = DateTime.ParseExact(parts[5], "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
             // Opretter og returnerer et nyt Movie-objekt
-            return new Movie(movieID, title, runTime, genres, director, premiereDate);
+            return new Movie(movieId, title, runTime, genres, director, premiereDate);
         }
     }
 }

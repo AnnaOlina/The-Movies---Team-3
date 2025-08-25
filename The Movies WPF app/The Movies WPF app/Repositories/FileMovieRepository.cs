@@ -41,5 +41,13 @@ namespace The_Movies_WPF_app.Repositories
             // Appenderer ét Movie-objekt til filen
             File.AppendAllText(_filePath, movie.ToString() + Environment.NewLine);
         }
+
+        // Ekstra metode til at få et Dictionary af MovieId og RunTime. Skal bruges i ScreeningRepository
+        public Dictionary<Guid, TimeSpan> GetMovieRunTimes()
+        {
+            return GetAllMovies()
+                .Where(m => m.MovieId != Guid.Empty && m.RunTime > TimeSpan.Zero)
+                .ToDictionary(m => m.MovieId, m => m.RunTime);
+        }
     }
 }
