@@ -5,8 +5,72 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:The_Movies_WPF_app.Views"
         mc:Ignorable="d"
-        Title="MonthlyScheduleView" Height="450" Width="800">
-    <Grid>
-        
+        Title="Månedsplan for biograf" Height="600" Width="800">
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Månedsplan" FontSize="24" FontWeight="Bold" Grid.Row="0" Margin="0,0,0,15"/>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,15">
+            <StackPanel>
+                <TextBlock Text="Vælg Biograf:" FontWeight="SemiBold"/>
+                <ComboBox ItemsSource="{Binding Cinemas}" 
+                          SelectedItem="{Binding SelectedCinema}"
+                          DisplayMemberPath="CinemaName"
+                          Width="200"
+                          Margin="0,5,20,0"/>
+            </StackPanel>
+
+            <StackPanel>
+                <TextBlock Text="Vælg en dato i måneden:" FontWeight="SemiBold"/>
+                <DatePicker SelectedDate="{Binding SelectedMonth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                DisplayDate="{Binding SelectedMonth}"
+                Width="150"
+                Margin="0,5,0,0">
+                    <DatePicker.Resources>
+                        <Style TargetType="DatePickerTextBox">
+                            <Setter Property="Control.Template">
+                                <Setter.Value>
+                                    <ControlTemplate>
+                                        <TextBox Text="{Binding Path=SelectedDate, StringFormat='MMMM yyyy', 
+                                     RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}}" />
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </DatePicker.Resources>
+                </DatePicker>
+            </StackPanel>
+        </StackPanel>
+
+        <DataGrid Grid.Row="2" 
+                  ItemsSource="{Binding Schedule}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  IsReadOnly="True"
+                  HeadersVisibility="Column">
+
+            <DataGrid.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name, StringFormat='dddd d. MMMM'}" FontWeight="Bold" FontSize="16" Margin="5"/>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>
+            </DataGrid.GroupStyle>
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Sal" Binding="{Binding AuditoriumNumber}" FontWeight="Bold" Width="Auto"/>
+                <DataGridTextColumn Header="Film" Binding="{Binding MovieTitle}" Width="2*"/>
+                <DataGridTextColumn Header="Start" Binding="{Binding StartTime, StringFormat='HH:mm'}" Width="*"/>
+                <DataGridTextColumn Header="Slut" Binding="{Binding EndTime, StringFormat='HH:mm'}" Width="*"/>
+                <DataGridTextColumn Header="Varighed" Binding="{Binding Duration, StringFormat='hh\\:mm'}" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
-</Window>
+</Window> 
