@@ -58,7 +58,7 @@
             <TextBlock Text="Film:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,10" FontWeight="Bold"/>
             <ComboBox 
                ItemsSource="{Binding Movies}"
-               SelectedItem="{Binding Movie, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+               SelectedItem="{Binding Movie, Mode=TwoWay}"
         Grid.Row="1" Grid.Column="1" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left"/>
             <!-- Bindings should be changed so it displays a list of movies registered in the system. -->
             <!-- Biograf -->
