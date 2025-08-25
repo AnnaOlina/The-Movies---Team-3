@@ -10,6 +10,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="movies.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="movies.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
     <Folder Include="Data\" />
   </ItemGroup>
 </Project>

@@ -28,21 +28,23 @@ namespace The_Movies_WPF_app.Models
         public const char GenreSeparator = '|';
 
         // Properties
+        public Guid MovieID { get; }
         public string Title { get; set; }
         public TimeSpan RunTime { get; set; }
         public List<MovieGenre> Genres { get; set; }
+        public string Director { get; set; }
+        public DateTime PremiereDate { get; set; }
 
         // Konstruktør
-        public Movie(string title, TimeSpan runTime, IEnumerable<MovieGenre> genres)
+        public Movie(Guid movieID, string title, TimeSpan runTime, List<MovieGenre> genres, string director, DateTime premiereDate)
         {
+            MovieID = movieID;
             Title = title;
             RunTime = runTime;
             Genres = genres.ToList();
+            Director = director;
+            PremiereDate = premiereDate;
         }
-
-        // Tillader at angive én eller flere genrer
-        public Movie(string title, TimeSpan runTime, params MovieGenre[] genres)
-            : this(title, runTime, (IEnumerable<MovieGenre>)genres) { }
 
         public override string ToString()
         {
@@ -53,8 +55,17 @@ namespace The_Movies_WPF_app.Models
             // Saml flere genrer til en string
             var genresJoined = string.Join(GenreSeparator, Genres);
 
+            // Formaterer premieredatoen til "yyyy-MM-dd"
+            var premiereDateFormatted = PremiereDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+
             // Bygger linje, der skal gemmes i fil
-            return string.Join(FieldSeparator, Title, minutes, genresJoined);
+            return string.Join(FieldSeparator,
+            MovieID.ToString(),
+            Title,
+            minutes,
+            genresJoined,
+            Director,
+            premiereDateFormatted);
         }
 
         public static Movie FromString(string line)
@@ -62,21 +73,22 @@ namespace The_Movies_WPF_app.Models
             // Splitter hele linjen op i felter adskilt af FieldSeparator
             var parts = line.Split(FieldSeparator);
 
-            var title = parts[0];
-            var minutes = int.Parse(parts[1], CultureInfo.InvariantCulture);
+            var movieID = Guid.Parse(parts[0]);
+            var title = parts[1];
+            var minutes = int.Parse(parts[2], CultureInfo.InvariantCulture);
             var runTime = TimeSpan.FromMinutes(minutes);
-            // Liste af genrer, adskilt af GenreSeparator
-            var genres = new List<MovieGenre>();
 
-            foreach (var token in parts[2].Split(GenreSeparator))
-            {
-                // Parser hver genre fra tekst til enum-værdi
-                var g = Enum.Parse<MovieGenre>(token, true);
-                genres.Add(g);
-            }
+            // Liste af genrer, adskilt af GenreSeparator
+            var genres = parts[3]
+            .Split(GenreSeparator)
+            .Select(g => Enum.Parse<MovieGenre>(g, true))
+            .ToList();
+
+            var director = parts[4];
+            var premiereDate = DateTime.ParseExact(parts[5], "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
             // Opretter og returnerer et nyt Movie-objekt
-            return new Movie(title, runTime, genres);
+            return new Movie(movieID, title, runTime, genres, director, premiereDate);
         }
     }
 }
