@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using The_Movies_WPF_app.Commands;
 using The_Movies_WPF_app.Models;
+using The_Movies_WPF_app.Repositories;
 
 namespace The_Movies_WPF_app.ViewModels
 {
@@ -32,8 +33,10 @@ namespace The_Movies_WPF_app.ViewModels
 
 
         // Trying to put in in order of how it's shown in the view
+
         // --------------------- 1. Properties
-       
+
+        private readonly IScreeningRepository _screeningRepository;
 
         private Movie _movie;
         public Movie Movie
@@ -101,15 +104,22 @@ namespace The_Movies_WPF_app.ViewModels
 
 
 
+        // Constructor
         public RegisterScreeningViewModel(
         ObservableCollection<Movie> movies,
         ObservableCollection<Cinema> cinemas,
-        ObservableCollection<Auditorium> allAuditoriums) // full list, injected
+        ObservableCollection<Auditorium> allAuditoriums,
+        IScreeningRepository screeningRepository)
         {
+            _screeningRepository = screeningRepository;
+
             Movies = new ReadOnlyObservableCollection<Movie>(movies);
             Cinemas = new ReadOnlyObservableCollection<Cinema>(cinemas);
             _allAuditoriums = allAuditoriums;
             Auditoriums = new ReadOnlyObservableCollection<Auditorium>(_auditoriums);
+            _screenings = new ObservableCollection<Screening>(_screeningRepository.GetAllScreenings());
+            Screenings = new ReadOnlyObservableCollection<Screening>(_screenings);
+
             SaveScreeningCommand = new RelayCommand(
         execute: _ => SaveScreening(),
         canExecute: _ => CanSaveScreening()
@@ -118,10 +128,12 @@ namespace The_Movies_WPF_app.ViewModels
             ClearFieldsCommand = new RelayCommand(
                 execute: _ => ClearFields()
             );
-            Screenings = new ReadOnlyObservableCollection<Screening>(_screenings);
+           
+
+            
         }
         // --------------------- 2. Collections 
-        //registered movies here?
+        
         private readonly ObservableCollection<Screening> _screenings = new();
         public ReadOnlyObservableCollection<Screening> Screenings { get; }
 
@@ -180,6 +192,10 @@ namespace The_Movies_WPF_app.ViewModels
                 auditoriumId: Auditorium.AuditoriumId
             );
 
+            
+            _screeningRepository.AddScreening(newScreening);
+
+            
             _screenings.Add(newScreening);
 
             ClearFields();
