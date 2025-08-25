@@ -50,14 +50,14 @@
             <!-- Separator før Titel -->
             <Separator Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,10" Background="#CCCCCC" Height="1"/>
 
-            <!-- FilmTitel -->
+            <!-- Film fra Liste -->
             <TextBlock Text="Film:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,10" FontWeight="Bold"/>
-            <ComboBox Text="{Binding MovieList, UpdateSourceTrigger=PropertyChanged}" 
+            <ComboBox Text="{Binding Movies, UpdateSourceTrigger=PropertyChanged}" 
         Grid.Row="1" Grid.Column="1" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left"/>
             <!-- Bindings should be changed so it displays a list of movies registered in the system. -->
             <!-- Biograf -->
             <TextBlock Text="Biograf:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,10" FontWeight="Bold"/>
-            <ComboBox Text="{Binding CinemaList, UpdateSourceTrigger=PropertyChanged}" 
+            <ComboBox Text="{Binding Cinemas, UpdateSourceTrigger=PropertyChanged}" 
 Grid.Row="2" Grid.Column="1" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left"/>
 
             <!-- StartTid-->
