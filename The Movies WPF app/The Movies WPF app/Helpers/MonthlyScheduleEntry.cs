@@ -1,9 +1,9 @@
 ﻿using System;
 using The_Movies_WPF_app.Models;
 
-namespace The_Movies_WPF_app.ViewModels
+namespace The_Movies_WPF_app.Helpers
 {
-    // Denne klasse samler information, der skal vises for hver enkelt screening i oversigten.
+    // Denne hjælpeklasse samler information, der skal vises for hver enkelt screening i oversigten.
     public class MonthlyScheduleEntry
     {
         public string MovieTitle { get; set; }

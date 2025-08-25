@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using The_Movies_WPF_app.Models;
 using The_Movies_WPF_app.Repositories;
+using The_Movies_WPF_app.Helpers;
 
 namespace The_Movies_WPF_app.ViewModels
 {
@@ -23,7 +21,7 @@ namespace The_Movies_WPF_app.ViewModels
 
         // --- Properties til DataBinding ---
 
-        // Liste over alle biografer til ComboBox
+        // Liste over alle biografer
         public ObservableCollection<Cinema> Cinemas { get; set; }
 
         // Den valgte biograf
