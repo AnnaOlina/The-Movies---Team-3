@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using The_Movies_WPF_app.Commands;
 using The_Movies_WPF_app.Models;
 using The_Movies_WPF_app.Repositories;
@@ -38,6 +40,11 @@ namespace The_Movies_WPF_app.ViewModels
 
         private readonly IScreeningRepository _screeningRepository;
 
+        private readonly IMovieRepository _movieRepository;
+        private readonly ICinemaRepository _cinemaRepository;
+        private readonly IAuditoriumRepository _auditoriumRepository;
+
+
         private Movie _movie;
         public Movie Movie
         {
@@ -48,6 +55,7 @@ namespace The_Movies_WPF_app.ViewModels
                 {
                     _movie = value;
                     OnPropertyChanged();
+                    SaveScreeningCommand.RaiseCanExecuteChanged();
                 }
             }
         }
@@ -62,6 +70,7 @@ namespace The_Movies_WPF_app.ViewModels
                     _cinema = value;
                     OnPropertyChanged();
                     UpdateAuditoriums(); // <-- This updates the Auditorium list based on what cinema is chosen.
+                    SaveScreeningCommand.RaiseCanExecuteChanged();
                 }
             }
         }
@@ -99,41 +108,39 @@ namespace The_Movies_WPF_app.ViewModels
         public Auditorium Auditorium
         {
             get => _auditorium;
-            set { if (_auditorium != value) { _auditorium = value; OnPropertyChanged(); } }
+            set { if (_auditorium != value) { _auditorium = value; OnPropertyChanged(); SaveScreeningCommand.RaiseCanExecuteChanged(); } }
         }
 
 
 
         // Constructor
-        public RegisterScreeningViewModel(
-        ObservableCollection<Movie> movies,
-        ObservableCollection<Cinema> cinemas,
-        ObservableCollection<Auditorium> allAuditoriums,
-        IScreeningRepository screeningRepository)
+        public RegisterScreeningViewModel()
         {
-            _screeningRepository = screeningRepository;
+            // create repos here
+            var movieRepo = new FileMovieRepository();
+            var cinemaRepo = new FileCinemaRepository();
+            var auditoriumRepo = new FileAuditoriumRepository();
+            _screeningRepository = new FileScreeningRepository(movieRepo);
+           
 
-            Movies = new ReadOnlyObservableCollection<Movie>(movies);
-            Cinemas = new ReadOnlyObservableCollection<Cinema>(cinemas);
-            _allAuditoriums = allAuditoriums;
+            // load data
+            Movies = new ReadOnlyObservableCollection<Movie>(
+                new ObservableCollection<Movie>(movieRepo.GetAllMovies()));
+            Cinemas = new ReadOnlyObservableCollection<Cinema>(
+                new ObservableCollection<Cinema>(cinemaRepo.GetAllCinemas()));
+            _allAuditoriums = new ObservableCollection<Auditorium>(
+                auditoriumRepo.GetAllAuditoriums());
             Auditoriums = new ReadOnlyObservableCollection<Auditorium>(_auditoriums);
+
             _screenings = new ObservableCollection<Screening>(_screeningRepository.GetAllScreenings());
             Screenings = new ReadOnlyObservableCollection<Screening>(_screenings);
 
-            SaveScreeningCommand = new RelayCommand(
-        execute: _ => SaveScreening(),
-        canExecute: _ => CanSaveScreening()
-    );
-
-            ClearFieldsCommand = new RelayCommand(
-                execute: _ => ClearFields()
-            );
-           
-
-            
+            SaveScreeningCommand = new RelayCommand(_ => SaveScreening(), _ => CanSaveScreening());
+            ClearFieldsCommand = new RelayCommand(_ => ClearFields());
         }
+
         // --------------------- 2. Collections 
-        
+
         private readonly ObservableCollection<Screening> _screenings = new();
         public ReadOnlyObservableCollection<Screening> Screenings { get; }
 
@@ -197,6 +204,8 @@ namespace The_Movies_WPF_app.ViewModels
 
             
             _screenings.Add(newScreening);
+
+            System.Windows.MessageBox.Show("Din forestilling er blevet oprettet!", "Sådan!", MessageBoxButton.OK, MessageBoxImage.Information);
 
             ClearFields();
         }

@@ -59,15 +59,29 @@
             <ComboBox 
                ItemsSource="{Binding Movies}"
                SelectedItem="{Binding Movie, Mode=TwoWay}"
+                 DisplayMemberPath="Title"
         Grid.Row="1" Grid.Column="1" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left"/>
             <!-- Bindings should be changed so it displays a list of movies registered in the system. -->
             <!-- Biograf -->
            <TextBlock Text="Biograf:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,10" FontWeight="Bold"/>
-           <ComboBox
+            <ComboBox
                ItemsSource="{Binding Cinemas}"
                SelectedItem="{Binding Cinema, Mode=TwoWay}"
-               
-        Grid.Row="2" Grid.Column="1" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                Grid.Row="2" Grid.Column="1" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left">
+               <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0} ({1})">
+                                <Binding Path="CinemaName"/>
+                                <Binding Path="Location"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            
 
             <!-- StartTid-->
             <TextBlock Text="Starttid:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,5" FontWeight="Bold"/>
@@ -128,6 +142,7 @@
             <ComboBox
                 ItemsSource="{Binding Auditoriums}"
                 SelectedItem="{Binding Auditorium, Mode=TwoWay}"
+                DisplayMemberPath="AuditoriumNumber"
                 
 Grid.Row="5" Grid.Column="1" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left"/>
             <!-- Needs to check: What "Auditoriums" are available, and only show a list of the ones available-->

@@ -27,8 +27,8 @@ namespace The_Movies_WPF_app.Views
         {
             InitializeComponent();
 
-            RegisterScreeningViewModel vm = new RegisterScreeningViewModel();
-            DataContext = vm;
+            DataContext= new RegisterScreeningViewModel();
+            
         }
     }
 }
