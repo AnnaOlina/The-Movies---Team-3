@@ -4,10 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:The_Movies_WPF_app.Views"
+        xmlns:local2="clr-namespace:The_Movies_WPF_app.Helpers"
         mc:Ignorable="d"
         Title="RegisterScreeningView" Height="450" Width="500"
         SizeToContent="WidthAndHeight"
         ResizeMode="CanMinimize">
+    <Window.Resources>
+        <local2:TimeOnlyConverter x:Key="TimeOnlyConverter"/>
+    </Window.Resources>
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -47,22 +51,42 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- Separator før Titel -->
+            <!-- Separator før Film -->
             <Separator Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,10" Background="#CCCCCC" Height="1"/>
 
-            <!-- FilmTitel -->
+            <!-- Film fra Liste -->
             <TextBlock Text="Film:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,10" FontWeight="Bold"/>
-            <ComboBox Text="{Binding MovieList, UpdateSourceTrigger=PropertyChanged}" 
+            <ComboBox 
+               ItemsSource="{Binding Movies}"
+               SelectedItem="{Binding Movie, Mode=TwoWay}"
+                 DisplayMemberPath="Title"
         Grid.Row="1" Grid.Column="1" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left"/>
             <!-- Bindings should be changed so it displays a list of movies registered in the system. -->
             <!-- Biograf -->
-            <TextBlock Text="Biograf:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,10" FontWeight="Bold"/>
-            <ComboBox Text="{Binding CinemaList, UpdateSourceTrigger=PropertyChanged}" 
-Grid.Row="2" Grid.Column="1" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+           <TextBlock Text="Biograf:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,10" FontWeight="Bold"/>
+            <ComboBox
+               ItemsSource="{Binding Cinemas}"
+               SelectedItem="{Binding Cinema, Mode=TwoWay}"
+                Grid.Row="2" Grid.Column="1" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left">
+               <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0} ({1})">
+                                <Binding Path="CinemaName"/>
+                                <Binding Path="Location"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            
 
             <!-- StartTid-->
             <TextBlock Text="Starttid:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,5" FontWeight="Bold"/>
-            <TextBox Text=""
+            <TextBox Text="{Binding StartTime, Converter={StaticResource TimeOnlyConverter}, Mode=TwoWay}"
+                     
             Grid.Row="3" Grid.Column="1" Width="100" VerticalAlignment="Top" HorizontalAlignment="Left"/>
 
 
@@ -72,7 +96,8 @@ Grid.Row="2" Grid.Column="1" Width="150" VerticalAlignment="Top" HorizontalAlign
             Width="100"
             VerticalAlignment="Top"
             HorizontalAlignment="Left"
-            Margin="0,0,5,5">
+            Margin="0,0,5,5"
+            SelectedDate="{Binding Date, Mode=TwoWay}">
                 <!-- For at skrive "Vælg Dato" i DatePicker -->
                 <DatePicker.Resources>
                     <Style TargetType="DatePickerTextBox">
@@ -110,11 +135,15 @@ Grid.Row="2" Grid.Column="1" Width="150" VerticalAlignment="Top" HorizontalAlign
                     </Style>
                 </DatePicker.Resources>
             </DatePicker>
-            <!-- Needs to check: if the movie has premiered yet + the cinema has any available Auditoriums within that Date + the timespan.-->
+            
             
             <!-- Sal -->
             <TextBlock Text="Sal:" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,10" FontWeight="Bold"/>
-            <ComboBox Text="{Binding MovieList, UpdateSourceTrigger=PropertyChanged}" 
+            <ComboBox
+                ItemsSource="{Binding Auditoriums}"
+                SelectedItem="{Binding Auditorium, Mode=TwoWay}"
+                DisplayMemberPath="AuditoriumNumber"
+                
 Grid.Row="5" Grid.Column="1" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left"/>
             <!-- Needs to check: What "Auditoriums" are available, and only show a list of the ones available-->
 
@@ -135,8 +164,8 @@ Grid.Row="5" Grid.Column="1" Width="150" VerticalAlignment="Top" HorizontalAlign
            TextWrapping="Wrap"
            HorizontalAlignment="Right"/>
             <StackPanel Orientation="Horizontal">
-                <Button Content="Ryd" Width="80" Margin="0,0,10,0" Command="{Binding ClearCommand}"/>
-                <Button Content="Opret" Width="80" Command="{Binding RegisterScreeningCommand}"/>
+                <Button Content="Ryd" Width="80" Margin="0,0,10,0" Command="{Binding ClearFieldsCommand}"/>
+                <Button Content="Opret" Width="80" Command="{Binding SaveScreeningCommand}"/>
             </StackPanel>
         </StackPanel>
     </Grid>

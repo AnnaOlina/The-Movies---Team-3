@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using The_Movies_WPF_app.Models;
 using The_Movies_WPF_app.Repositories;
 using The_Movies_WPF_app.ViewModels;
 
@@ -24,7 +26,9 @@ namespace The_Movies_WPF_app.Views
         public RegisterScreeningView()
         {
             InitializeComponent();
-           // DataContext = new RegisterScreeningViewModel(new FileScreeningRepository("MonthlyPlan.csv"));
+
+            DataContext= new RegisterScreeningViewModel();
+            
         }
     }
 }
