@@ -97,7 +97,7 @@
             VerticalAlignment="Top"
             HorizontalAlignment="Left"
             Margin="0,0,5,5"
-            SelectedDate="{Binding Date, Mode=TwoWay}">
+            SelectedDate="{Binding DateAsDateTime, Mode=TwoWay}">
                 <!-- For at skrive "Vælg Dato" i DatePicker -->
                 <DatePicker.Resources>
                     <Style TargetType="DatePickerTextBox">

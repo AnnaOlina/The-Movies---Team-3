@@ -100,10 +100,26 @@ namespace The_Movies_WPF_app.ViewModels
                 {
                     _date = value;
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(DateAsDateTime)); // To make DateOnly work with DateTime (calls the wrapper)
                 }
             }
         }
-
+        // For DateOnly to work with the kalender, which uses DateTime, we gotta make a "wrapper"
+        public DateTime DateAsDateTime
+        {
+            get => _date.ToDateTime(TimeOnly.MinValue);
+            set
+            {
+                var newDate = DateOnly.FromDateTime(value);
+                if (_date != newDate)
+                {
+                    _date = newDate;
+                    OnPropertyChanged(nameof(Date));
+                    OnPropertyChanged(nameof(DateAsDateTime));
+                }
+            }
+        }
+        //Wrapper over.
         private Auditorium _auditorium;
         public Auditorium Auditorium
         {
@@ -116,6 +132,8 @@ namespace The_Movies_WPF_app.ViewModels
         // Constructor
         public RegisterScreeningViewModel()
         {
+            // Setting the calender to today's date.
+            _date = DateOnly.FromDateTime(DateTime.Today);
             // create repos here
             var movieRepo = new FileMovieRepository();
             var cinemaRepo = new FileCinemaRepository();
