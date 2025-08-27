@@ -30,12 +30,12 @@ namespace The_Movies_WPF_app.Views
             RegisterMovieView movieWindow = new RegisterMovieView();
             movieWindow.Show();
         }
-        //private void MonthlyPlan_Button_Click_1(object sender, RoutedEventArgs e)
-        //{
-        //    MonthlyPLanView mPlanWindow = new MonthlyPlanView();
-        //    mPlanWindow.Show();
-        //}
-        private void Screening_Button_Click_1(object sender, RoutedEventArgs e)
+        private void MonthlySchedule_Button_Click(object sender, RoutedEventArgs e)
+        {
+            MonthlyScheduleView mScheduleWindow = new MonthlyScheduleView();
+            mScheduleWindow.Show();
+        }
+        private void Screening_Button_Click(object sender, RoutedEventArgs e)
         {
             RegisterScreeningView screeningWindow = new RegisterScreeningView();
             screeningWindow.Show();
