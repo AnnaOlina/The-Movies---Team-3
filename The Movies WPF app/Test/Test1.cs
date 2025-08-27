@@ -1,11 +1,12 @@
 ﻿using The_Movies_WPF_app;
 using The_Movies_WPF_app.Models;
+using The_Movies_WPF_app.ViewModels;
 namespace Test
 {
     [TestClass]
     public sealed class Test1
     {
-       
+
         [TestMethod]
         public void RegisterMovieCommand_ShouldAddMovieToList()
         {
@@ -48,6 +49,92 @@ namespace Test
             CollectionAssert.Contains(addedMovie.MovieGenres, MovieGenre.Action);
 
 */
+        }
+        [TestClass]
+        public class RegisterScreeningViewModelTests
+        {
+            /*[TestMethod]
+            public void SaveScreeningCommand_ShouldAddScreening_WhenFieldsAreValid()
+            {
+                // Arrange
+                var viewModel = new RegisterScreeningViewModel();
+
+                // Vi vælger første film og biograf fra listen
+                viewModel.Movie = viewModel.Movies[0];
+                viewModel.Cinema = viewModel.Cinemas[0];
+
+                // Find et auditorium der matcher biografen
+                foreach (var aud in viewModel.Auditoriums)
+                {
+                    if (aud.CinemaId == viewModel.Cinema.CinemaId)
+                    {
+                        viewModel.Auditorium = aud;
+                        break;
+                    }
+                }
+
+                viewModel.Date = DateOnly.FromDateTime(DateTime.Today);
+                viewModel.StartTime = new TimeOnly(18, 0);
+
+                int initialCount = viewModel.Screenings.Count;
+
+                // Act
+                viewModel.SaveScreeningCommand.Execute(null);
+
+                // Assert
+                Assert.AreEqual(initialCount + 1, viewModel.Screenings.Count);
+            }*/
+
+            [TestMethod]
+            public void SaveScreeningCommand_CanExecute_ShouldRespondToFieldCombinations()
+            {
+                // Arrange fælles testdata
+                var testMovie = new Movie(
+                    movieID: Guid.NewGuid(),
+                    title: "Testfilm",
+                    runTime: TimeSpan.FromMinutes(120),
+                    genres: new List<MovieGenre> { MovieGenre.Action },
+                    director: "Test Instruktør",
+                    premiereDate: DateTime.Today.AddDays(-30)
+                );
+
+                var testCinemaId = Guid.NewGuid();
+
+                var testCinema = new Cinema(
+                    cinemaId: testCinemaId,
+                    cinemaName: "TestBio",
+                    location: "Aarhus"
+                );
+
+                var testAuditorium = new Auditorium(
+                    auditoriumId: Guid.NewGuid(),
+                    auditoriumNumber: 1,
+                    cinemaId: testCinemaId
+                );
+
+                var viewModel = new RegisterScreeningViewModel();
+
+                // Case 1: Ingen felter sat
+                // Act
+                var canExecute1 = viewModel.SaveScreeningCommand.CanExecute(null);
+                // Assert
+                Assert.IsFalse(canExecute1, "Fejl: Kommandoen burde ikke kunne eksekveres uden felter");
+
+                // Case 2: Kun Movie sat
+                viewModel.Movie = testMovie;
+                var canExecute2 = viewModel.SaveScreeningCommand.CanExecute(null);
+                Assert.IsFalse(canExecute2, "Fejl: Kommandoen burde ikke kunne eksekveres med kun Movie");
+
+                // Case 3: Movie + Cinema sat
+                viewModel.Cinema = testCinema;
+                var canExecute3 = viewModel.SaveScreeningCommand.CanExecute(null);
+                Assert.IsFalse(canExecute3, "Fejl: Kommandoen burde ikke kunne eksekveres uden Auditorium");
+
+                // Case 4: Alle felter sat
+                viewModel.Auditorium = testAuditorium;
+                var canExecute4 = viewModel.SaveScreeningCommand.CanExecute(null);
+                Assert.IsTrue(canExecute4, "Fejl: Kommandoen burde kunne eksekveres når alle felter er sat");
+            }
         }
     }
 }
