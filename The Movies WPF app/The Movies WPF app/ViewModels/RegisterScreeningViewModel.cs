@@ -181,7 +181,7 @@ namespace The_Movies_WPF_app.ViewModels
             Movie = null; 
             Cinema = null; 
             StartTime = TimeOnly.MinValue; // Setting it to 00.00.00
-            Date = DateOnly.FromDateTime(DateTime.Now); // Should show today.
+            Date = DateOnly.FromDateTime(DateTime.Today); // Should show today.
             Auditorium = null;
         }
         private void UpdateAuditoriums()
