@@ -10,6 +10,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace The_Movies_WPF_app.Views
@@ -24,9 +25,20 @@ namespace The_Movies_WPF_app.Views
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Movie_Button_Click(object sender, RoutedEventArgs e)
         {
-            
+            RegisterMovieView movieWindow = new RegisterMovieView();
+            movieWindow.Show();
+        }
+        //private void MonthlyPlan_Button_Click_1(object sender, RoutedEventArgs e)
+        //{
+        //    MonthlyPLanView mPlanWindow = new MonthlyPlanView();
+        //    mPlanWindow.Show();
+        //}
+        private void Screening_Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            RegisterScreeningView screeningWindow = new RegisterScreeningView();
+            screeningWindow.Show();
         }
     }
 }
