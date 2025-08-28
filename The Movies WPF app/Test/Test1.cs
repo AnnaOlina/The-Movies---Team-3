@@ -50,7 +50,7 @@ namespace Test
             CollectionAssert.Contains(addedMovie.MovieGenres, MovieGenre.Horror);
             CollectionAssert.Contains(addedMovie.MovieGenres, MovieGenre.Action);
 
-/*
+*/
         }
         [TestClass]
         public class RegisterScreeningViewModelTests
@@ -88,7 +88,7 @@ namespace Test
             }*/
 
             [TestMethod]
-            public void SaveScreeningCommand_CanExecute_ShouldRespondToFieldCombinations()
+            public void RegisterScreeningCommand_CanExecute_ShouldRespondToFieldCombinations()
             {
                 // Arrange fælles testdata
                 var testMovie = new Movie(
@@ -118,23 +118,23 @@ namespace Test
 
                 // Case 1: Ingen felter sat
                 // Act
-                var canExecute1 = viewModel.SaveScreeningCommand.CanExecute(null);
+                var canExecute1 = viewModel.RegisterScreeningCommand.CanExecute(null);
                 // Assert
                 Assert.IsFalse(canExecute1, "Fejl: Kommandoen burde ikke kunne eksekveres uden felter");
 
                 // Case 2: Kun Movie sat
                 viewModel.Movie = testMovie;
-                var canExecute2 = viewModel.SaveScreeningCommand.CanExecute(null);
+                var canExecute2 = viewModel.RegisterScreeningCommand.CanExecute(null);
                 Assert.IsFalse(canExecute2, "Fejl: Kommandoen burde ikke kunne eksekveres med kun Movie");
 
                 // Case 3: Movie + Cinema sat
                 viewModel.Cinema = testCinema;
-                var canExecute3 = viewModel.SaveScreeningCommand.CanExecute(null);
+                var canExecute3 = viewModel.RegisterScreeningCommand.CanExecute(null);
                 Assert.IsFalse(canExecute3, "Fejl: Kommandoen burde ikke kunne eksekveres uden Auditorium");
 
                 // Case 4: Alle felter sat
                 viewModel.Auditorium = testAuditorium;
-                var canExecute4 = viewModel.SaveScreeningCommand.CanExecute(null);
+                var canExecute4 = viewModel.RegisterScreeningCommand.CanExecute(null);
                 Assert.IsTrue(canExecute4, "Fejl: Kommandoen burde kunne eksekveres når alle felter er sat");
             }
         }
