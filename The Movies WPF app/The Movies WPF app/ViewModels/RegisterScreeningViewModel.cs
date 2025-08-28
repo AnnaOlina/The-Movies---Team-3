@@ -55,7 +55,7 @@ namespace The_Movies_WPF_app.ViewModels
                 {
                     _movie = value;
                     OnPropertyChanged();
-                    SaveScreeningCommand.RaiseCanExecuteChanged();
+                    RegisterScreeningCommand.RaiseCanExecuteChanged();
                 }
             }
         }
@@ -70,7 +70,7 @@ namespace The_Movies_WPF_app.ViewModels
                     _cinema = value;
                     OnPropertyChanged();
                     UpdateAuditoriums(); // <-- This updates the Auditorium list based on what cinema is chosen.
-                    SaveScreeningCommand.RaiseCanExecuteChanged();
+                    RegisterScreeningCommand.RaiseCanExecuteChanged();
                 }
             }
         }
@@ -124,7 +124,7 @@ namespace The_Movies_WPF_app.ViewModels
         public Auditorium Auditorium
         {
             get => _auditorium;
-            set { if (_auditorium != value) { _auditorium = value; OnPropertyChanged(); SaveScreeningCommand.RaiseCanExecuteChanged(); } }
+            set { if (_auditorium != value) { _auditorium = value; OnPropertyChanged(); RegisterScreeningCommand.RaiseCanExecuteChanged(); } }
         }
 
 
@@ -153,7 +153,7 @@ namespace The_Movies_WPF_app.ViewModels
             _screenings = new ObservableCollection<Screening>(_screeningRepository.GetAllScreenings());
             Screenings = new ReadOnlyObservableCollection<Screening>(_screenings);
 
-            SaveScreeningCommand = new RelayCommand(_ => SaveScreening(), _ => CanSaveScreening());
+            RegisterScreeningCommand = new RelayCommand(_ => RegisterScreening(), _ => CanSaveScreening());
             ClearFieldsCommand = new RelayCommand(_ => ClearFields());
         }
 
@@ -171,7 +171,7 @@ namespace The_Movies_WPF_app.ViewModels
         private readonly ObservableCollection<Auditorium> _auditoriums = new();
 
         // --------------------- 3. Commands til UI
-        public RelayCommand SaveScreeningCommand { get; }
+        public RelayCommand RegisterScreeningCommand { get; }
         public RelayCommand ClearFieldsCommand { get; }
 
         // --------------------- 4. Methods!
@@ -200,7 +200,7 @@ namespace The_Movies_WPF_app.ViewModels
 
             Auditorium = null; // reset selection when cinema changes
         }
-        private void SaveScreening()
+        private void RegisterScreening()
         {
             if (Movie == null || Auditorium == null)
                 return;
