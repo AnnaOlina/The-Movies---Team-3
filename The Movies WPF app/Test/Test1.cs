@@ -11,13 +11,15 @@ namespace Test
         public void RegisterMovieCommand_ShouldAddMovieToList()
         {
             /*
+             Testen fra første sprint. Virker ikke, da vi efterfølgende har lavet om på MovieClass :-)
+
              //Det her er primært fra eksemplet i MVVM læringsprojektet. Den burde bare teste om vores command "RegisterMovieCommand" gør det den skal.
              //Vi skal have en liste af genre i Movie før den kan virke.
 
             // Arrange
 
           
-            var viewModel = new RegisterMovieViewModel(new FakeMovieRepository()); //For at lave en "mock" så testen ikke tilføjer en film til den rigtige liste)
+            var viewModel = new RegisterMovieViewModel(); //For at lave en "mock" så testen ikke tilføjer en film til den rigtige liste)
             
 
             viewModel.Title = "Test Movie";
@@ -48,7 +50,7 @@ namespace Test
             CollectionAssert.Contains(addedMovie.MovieGenres, MovieGenre.Horror);
             CollectionAssert.Contains(addedMovie.MovieGenres, MovieGenre.Action);
 
-*/
+/*
         }
         [TestClass]
         public class RegisterScreeningViewModelTests
