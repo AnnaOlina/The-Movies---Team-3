@@ -15,11 +15,11 @@
         </Grid.Background>
         <Label Content="The Movies" HorizontalAlignment="Center" Margin="0,74,0,0" VerticalAlignment="Top" FontFamily="DejaVu Serif" FontSize="50" FontStyle="Oblique" FontWeight="Bold" Background="#00000000" Foreground="#FFA62C37"/>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal" >
-            <Button Width="120" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0,10,0" Background="#b6bfc1" Content="Tilføj Film" FontWeight="Bold" 
+            <Button Width="130" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0,10,0" Background="#b6bfc1" Content="Registrer Film" FontWeight="Bold" 
                     Click="Movie_Button_Click"></Button>
-            <Button Width="120" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0,10,0" Background="#b6bfc1" Content="Se Månedsplan" FontWeight="Bold"
+            <Button Width="130" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0,10,0" Background="#b6bfc1" Content="Se Månedsplan" FontWeight="Bold"
                     Click="MonthlySchedule_Button_Click"></Button>
-            <Button Width="120" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0,10,0" Background="#b6bfc1" Content="Tilføj Forestilling" FontWeight="Bold" 
+            <Button Width="130" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0,10,0" Background="#b6bfc1" Content="Registrer Forestilling" FontWeight="Bold" 
                     Click="Screening_Button_Click"></Button>
         </StackPanel>
 
