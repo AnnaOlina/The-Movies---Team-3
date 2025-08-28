@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:The_Movies_WPF_app.Views"
         xmlns:local2="clr-namespace:The_Movies_WPF_app.Helpers"
         mc:Ignorable="d"
-        Title="RegisterScreeningView" Height="450" Width="500"
+        Height="450" Width="500"
         SizeToContent="WidthAndHeight"
         ResizeMode="CanMinimize">
     <Window.Resources>
