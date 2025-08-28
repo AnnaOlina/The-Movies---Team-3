@@ -153,7 +153,7 @@ namespace The_Movies_WPF_app.ViewModels
             _screenings = new ObservableCollection<Screening>(_screeningRepository.GetAllScreenings());
             Screenings = new ReadOnlyObservableCollection<Screening>(_screenings);
 
-            RegisterScreeningCommand = new RelayCommand(_ => RegisterScreening(), _ => CanSaveScreening());
+            RegisterScreeningCommand = new RelayCommand(_ => RegisterScreening(), _ => CanRegisterScreening());
             ClearFieldsCommand = new RelayCommand(_ => ClearFields());
         }
 
@@ -228,7 +228,7 @@ namespace The_Movies_WPF_app.ViewModels
             ClearFields();
         }
 
-        private bool CanSaveScreening()
+        private bool CanRegisterScreening()
         {
             return Movie != null && Cinema != null && Auditorium != null;
         }
