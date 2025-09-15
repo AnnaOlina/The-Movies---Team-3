@@ -6,9 +6,6 @@ using The_Movies_WPF_app.Views;
 
 namespace The_Movies_WPF_app
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
         public static ServiceProvider ServiceProvider { get; private set; }
@@ -22,32 +19,35 @@ namespace The_Movies_WPF_app
 
         private void ConfigureServices(IServiceCollection services)
         {
-            // 1. Registrer Repositories (som Singletons - de skal kun leve én gang)
-            // Når nogen beder om IMovieRepository, skal de have FileMovieRepository.
+            // --- Repositories (Singletons) ---
+            // Vi registrerer fil-repos som singleton, da de peger på den samme fil.
             services.AddSingleton<IMovieRepository>(new FileMovieRepository("movies.csv"));
             services.AddSingleton<ICinemaRepository>(new FileCinemaRepository("cinemas.csv"));
             services.AddSingleton<IAuditoriumRepository>(new FileAuditoriumRepository("auditoriums.csv"));
 
-            // ScreeningRepo afhænger selv af IMovieRepository. Containeren løser selv dette.
+            // FileScreeningRepository afhænger selv af IMovieRepository. 
+            // Containeren finder selv ud af at "injicere" den i constructoren.
             services.AddSingleton<IScreeningRepository, FileScreeningRepository>();
 
-            // 2. Registrer ViewModels (som Transient - én ny hver gang vi beder om én)
+            // --- ViewModels (Transient) ---
+            // Vi vil have en ny ViewModel, hver gang et vindue åbnes.
             services.AddTransient<RegisterMovieViewModel>();
             services.AddTransient<RegisterScreeningViewModel>();
             services.AddTransient<MonthlyScheduleViewModel>();
 
-            // 3. Registrer Views (Vinduer)
+            // --- Views (Transient) ---
+            // Vi vil have et nyt vindue, hver gang det kaldes.
             services.AddTransient<RegisterMovieView>();
             services.AddTransient<RegisterScreeningView>();
             services.AddTransient<MonthlyScheduleView>();
-            services.AddTransient<FrontPage>(); // Din hovedside
+            services.AddTransient<FrontPage>(); // Vigtigt: Hovedsiden skal også med.
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
-            // Start applikationen ved at bede containeren om hovedsiden
+            // Bed containeren om at starte hovedsiden.
             var frontPage = ServiceProvider.GetService<FrontPage>();
             frontPage?.Show();
         }

@@ -39,7 +39,6 @@ namespace The_Movies_WPF_app.ViewModels
         // --------------------- 1. Properties
 
         private readonly IScreeningRepository _screeningRepository;
-
         private readonly IMovieRepository _movieRepository;
         private readonly ICinemaRepository _cinemaRepository;
         private readonly IAuditoriumRepository _auditoriumRepository;
@@ -132,22 +131,22 @@ namespace The_Movies_WPF_app.ViewModels
         // Constructor
         public RegisterScreeningViewModel(IMovieRepository movieRepo, ICinemaRepository cinemaRepo, IAuditoriumRepository auditoriumRepo, IScreeningRepository screeningRepo)
         {
-            // Setting the calender to today's date.
-            _date = DateOnly.FromDateTime(DateTime.Today);
-            // Tildel de modtagne interfaces til felterne
+            // Tildel modtagne services
             _movieRepository = movieRepo;
             _cinemaRepository = cinemaRepo;
             _auditoriumRepository = auditoriumRepo;
             _screeningRepository = screeningRepo;
 
+            // Setting the calender to today's date.
+            _date = DateOnly.FromDateTime(DateTime.Today);
 
             // load data
             Movies = new ReadOnlyObservableCollection<Movie>(
-                new ObservableCollection<Movie>(movieRepo.GetAllMovies()));
+                new ObservableCollection<Movie>(_movieRepository.GetAllMovies()));
             Cinemas = new ReadOnlyObservableCollection<Cinema>(
-                new ObservableCollection<Cinema>(cinemaRepo.GetAllCinemas()));
+                new ObservableCollection<Cinema>(_cinemaRepository.GetAllCinemas()));
             _allAuditoriums = new ObservableCollection<Auditorium>(
-                auditoriumRepo.GetAllAuditoriums());
+                _auditoriumRepository.GetAllAuditoriums());
             Auditoriums = new ReadOnlyObservableCollection<Auditorium>(_auditoriums);
 
             _screenings = new ObservableCollection<Screening>(_screeningRepository.GetAllScreenings());
@@ -156,7 +155,6 @@ namespace The_Movies_WPF_app.ViewModels
             RegisterScreeningCommand = new RelayCommand(_ => RegisterScreening(), _ => CanRegisterScreening());
             ClearFieldsCommand = new RelayCommand(_ => ClearFields());
         }
-
         // --------------------- 2. Collections 
 
         private readonly ObservableCollection<Screening> _screenings = new();
