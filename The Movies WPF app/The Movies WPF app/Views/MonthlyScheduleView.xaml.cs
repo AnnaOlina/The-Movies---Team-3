@@ -24,5 +24,10 @@ namespace The_Movies_WPF_app.Views
         {
 
         }
+
+        private void DataGrid_SelectionChanged_1(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

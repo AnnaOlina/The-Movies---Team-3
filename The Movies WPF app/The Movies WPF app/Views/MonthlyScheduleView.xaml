@@ -52,7 +52,7 @@
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
                   IsReadOnly="True"
-                  HeadersVisibility="Column">
+                  HeadersVisibility="Column" SelectionChanged="DataGrid_SelectionChanged_1">
 
             <DataGrid.GroupStyle>
                 <GroupStyle>
@@ -65,11 +65,11 @@
             </DataGrid.GroupStyle>
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Sal" Binding="{Binding AuditoriumNumber}" FontWeight="Bold" Width="Auto"/>
-                <DataGridTextColumn Header="Film" Binding="{Binding MovieTitle}" Width="2*"/>
-                <DataGridTextColumn Header="Start" Binding="{Binding StartTime, StringFormat='HH:mm'}" Width="*"/>
-                <DataGridTextColumn Header="Slut" Binding="{Binding EndTime, StringFormat='HH:mm'}" Width="*"/>
-                <DataGridTextColumn Header="Varighed" Binding="{Binding Duration, StringFormat='hh\\:mm'}" Width="*"/>
+                <DataGridTextColumn Header="Sal" Binding="{Binding AuditoriumNumber}" FontWeight="Bold" Width="Auto" MinWidth="40"/>
+                <DataGridTextColumn Header="Film" Binding="{Binding MovieTitle}" Width="3*"/>
+                <DataGridTextColumn Header="Start" Binding="{Binding StartTime, StringFormat='HH:mm'}" Width="*" MinWidth="60"/>
+                <DataGridTextColumn Header="Slut" Binding="{Binding EndTime, StringFormat='HH:mm'}" Width="*" MinWidth="60"/>
+                <DataGridTextColumn Header="Varighed" Binding="{Binding Duration, StringFormat='hh\\:mm'}" Width="*" MinWidth="80"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
