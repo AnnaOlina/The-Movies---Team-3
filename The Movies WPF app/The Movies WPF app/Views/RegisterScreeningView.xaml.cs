@@ -21,14 +21,9 @@ namespace The_Movies_WPF_app.Views
     /// <summary>
     /// Interaction logic for RegisterScreeningView.xaml
     /// </summary>
-    public partial class RegisterScreeningView : Window
+    public RegisterScreeningView(RegisterScreeningViewModel viewModel)
     {
-        public RegisterScreeningView()
-        {
-            InitializeComponent();
-
-            DataContext= new RegisterScreeningViewModel();
-            
-        }
+        InitializeComponent();
+        DataContext = viewModel;
     }
 }

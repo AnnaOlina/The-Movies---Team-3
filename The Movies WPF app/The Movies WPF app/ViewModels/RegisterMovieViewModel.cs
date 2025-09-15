@@ -1,216 +1,81 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using The_Movies_WPF_app.Commands;
 using The_Movies_WPF_app.Models;
-using The_Movies_WPF_app.Helpers;
 using The_Movies_WPF_app.Repositories;
 
 namespace The_Movies_WPF_app.ViewModels
 {
-    public class RegisterMovieViewModel : INotifyPropertyChanged
+    public sealed class RegisterMovieViewModel : INotifyPropertyChanged
     {
-        // Repository til lagring af film
-        private readonly IMovieRepository _movieRepository;
+        private readonly IMovieRepository _repo;
 
-        // Felter
-        private string _title;
-        private string _durationMinutesText;
-        private string _validationMessage;
-        private string _director;
-        private DateTime _premiereDate=DateTime.Today;
+        // Bound list in the view
+        public ObservableCollection<Movie> Movies { get; } = new();
 
-        // PropertyChanged event til databinding
-        public event PropertyChangedEventHandler PropertyChanged;
+        // Expose as ICommand (implementation is RelayCommand)
+        public ICommand RegisterMovieCommand { get; }
 
-        // Titel på filmen
+        // Bound form fields
+        private string _title = "";
         public string Title
         {
             get => _title;
-            set
-            {
-                if (_title != value)
-                {
-                    _title = value;
-                    OnPropertyChanged(nameof(Title));
-
-                    // Tjekker for dublet-titel
-                    if (!string.IsNullOrWhiteSpace(_title) && Movies != null)
-                    {
-                        ValidationMessage = Movies.Any(m =>
-                            string.Equals(m.Title?.Trim(), _title.Trim(), StringComparison.OrdinalIgnoreCase))
-                            ? "Der findes allerede en film med denne titel."
-                            : string.Empty;
-                    }
-                    else
-                    {
-                        ValidationMessage = string.Empty;
-                    }
-
-                    // Opdater knapstatus
-                    (RegisterMovieCommand as RelayCommand)?.RaiseCanExecuteChanged();
-                }
-            }
+            set { if (_title != value) { _title = value; OnPropertyChanged(nameof(Title)); } }
         }
 
-        // Varighed i minutter (string, for bedre validering)
-        public string DurationMinutesText
+        private TimeSpan _runTime;
+        public TimeSpan RunTime
         {
-            get => _durationMinutesText;
-            set
-            {
-                if (_durationMinutesText != value)
-                {
-                    _durationMinutesText = value;
-                    OnPropertyChanged(nameof(DurationMinutesText));
-                    (RegisterMovieCommand as RelayCommand)?.RaiseCanExecuteChanged();
-                }
-            }
+            get => _runTime;
+            set { if (_runTime != value) { _runTime = value; OnPropertyChanged(nameof(RunTime)); } }
         }
 
-        // Fejlbesked til bruger
-        public string ValidationMessage
+        private MovieGenre _selectedGenre;
+        public MovieGenre SelectedGenre
         {
-            get => _validationMessage;
-            set
-            {
-                if (_validationMessage != value)
-                {
-                    _validationMessage = value;
-                    OnPropertyChanged(nameof(ValidationMessage));
-                }
-            }
+            get => _selectedGenre;
+            set { if (_selectedGenre != value) { _selectedGenre = value; OnPropertyChanged(nameof(SelectedGenre)); } }
         }
 
-        // Instruktørens navn
-        public string Director
+        // DI happens here: ViewModel knows only the interface
+        public RegisterMovieViewModel(IMovieRepository repo)
         {
-            get => _director;
-            set
-            {
-                if (_director != value)
-                {
-                    _director = value;
-                    OnPropertyChanged(nameof(Director));
-                    (RegisterMovieCommand as RelayCommand)?.RaiseCanExecuteChanged();
-                }
-            }
+            _repo = repo;
+
+            // Command wiring
+            RegisterMovieCommand = new RelayCommand(_ => RegisterMovie(), _ => CanRegisterMovie());
+
+            // Optional: preload list
+            foreach (var m in _repo.GetAllMovies()) Movies.Add(m);
         }
 
+        private bool CanRegisterMovie()
+            => !string.IsNullOrWhiteSpace(Title) && RunTime > TimeSpan.Zero;
 
-        // Premiere dato
-        public DateTime PremiereDate
+        // Sequence: RegisterMovie() -> repo.AddMovie(movie) -> ClearFields()
+        private void RegisterMovie()
         {
-            get => _premiereDate;
-            set
-            {
-                if (_premiereDate != value)
-                {
-                    _premiereDate = value;
-                    OnPropertyChanged(nameof(PremiereDate));
-                    (RegisterMovieCommand as RelayCommand)?.RaiseCanExecuteChanged();
-                }
-            }
+            var movie = new Movie(Title, RunTime, SelectedGenre);
+
+            _repo.AddMovie(movie);     // persistence
+            Movies.Add(movie);         // update UI list
+
+            ClearFields();
         }
 
-
-        // Liste over tilgængelige genrer (med checkbox)
-        public ObservableCollection<GenreItem> AvailableGenres { get; }
-
-        // Liste over registrerede film
-        public ObservableCollection<Movie> Movies { get; set; } = new();
-
-        // Kommandoer til knapper
-        public ICommand RegisterMovieCommand { get; }
-        public ICommand ClearCommand { get; }
-
-        // Constructor
-        public RegisterMovieViewModel(IMovieRepository movieRepository)
+        private void ClearFields()
         {
-            _movieRepository = movieRepository ?? throw new ArgumentNullException(nameof(movieRepository));
-            Movies = new ObservableCollection<Movie>(_movieRepository.GetAllMovies());
-
-            // Initialiser genrer fra enum
-            AvailableGenres = new ObservableCollection<GenreItem>(
-                Enum.GetValues(typeof(MovieGenre))
-                    .Cast<MovieGenre>()
-                    .Select(g => new GenreItem { Name = g.ToString(), Genre = g, IsSelected = false })
-                    .OrderBy(g => g.Name)
-            );
-
-            // Lyt til ændringer i genrevalg
-            foreach (var genre in AvailableGenres)
-            {
-                genre.PropertyChanged += (s, e) =>
-                {
-                    if (e.PropertyName == nameof(GenreItem.IsSelected))
-                    {
-                        (RegisterMovieCommand as RelayCommand)?.RaiseCanExecuteChanged();
-                    }
-                };
-            }
-
-            // Initialiser kommandoer
-            RegisterMovieCommand = new RelayCommand(RegisterMovie, CanRegisterMovie);
-            ClearCommand = new RelayCommand(ClearForm);
+            Title = "";
+            RunTime = TimeSpan.Zero;
+            SelectedGenre = default;
+            // Properties already raise OnPropertyChanged in their setters
         }
 
-        // Validering til registrering af film
-        private bool CanRegisterMovie(object parameter)
-        {
-            bool isValidDuration = int.TryParse(DurationMinutesText, out int minutes) && minutes > 0;
-
-            return  !string.IsNullOrWhiteSpace(Title) &&
-                    !string.IsNullOrWhiteSpace(Director) &&
-                    isValidDuration &&
-                    AvailableGenres.Any(g => g.IsSelected) &&
-                    !Movies.Any(m => string.Equals(m.Title.Trim(), Title.Trim(), StringComparison.OrdinalIgnoreCase));
-        }
-
-        // Registrer ny film
-        private void RegisterMovie(object parameter)
-        {
-            int minutes = int.Parse(DurationMinutesText);
-            var selectedGenres = AvailableGenres
-                .Where(g => g.IsSelected)
-                .Select(g => g.Genre)
-                .ToList();
-
-            var movie = new Movie(
-                Guid.NewGuid(),
-                Title,
-                TimeSpan.FromMinutes(minutes),
-                selectedGenres,
-                Director,
-                PremiereDate);
-
-            _movieRepository.AddMovie(movie);
-            Movies.Add(movie); // vigtigt for validering, hvis man skal tilføje en film mere. Tilføjer film til ObservableCollection.
-
-            ClearForm(null);
-        }
-
-        // Ryd formularen
-        private void ClearForm(object parameter)
-        {
-            Title = string.Empty;
-            DurationMinutesText = null;
-            foreach (var genre in AvailableGenres)
-                genre.IsSelected = false;
-
-            Director = string.Empty;
-            PremiereDate = DateTime.Today;
-
-            (RegisterMovieCommand as RelayCommand)?.RaiseCanExecuteChanged();
-        }
-
-        // Notificer UI om ændringer
-        protected void OnPropertyChanged(string propertyName) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        // INotifyPropertyChanged
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private void OnPropertyChanged(string name)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }

@@ -130,16 +130,16 @@ namespace The_Movies_WPF_app.ViewModels
 
 
         // Constructor
-        public RegisterScreeningViewModel()
+        public RegisterScreeningViewModel(IMovieRepository movieRepo, ICinemaRepository cinemaRepo, IAuditoriumRepository auditoriumRepo, IScreeningRepository screeningRepo)
         {
             // Setting the calender to today's date.
             _date = DateOnly.FromDateTime(DateTime.Today);
-            // create repos here
-            var movieRepo = new FileMovieRepository();
-            var cinemaRepo = new FileCinemaRepository();
-            var auditoriumRepo = new FileAuditoriumRepository();
-            _screeningRepository = new FileScreeningRepository(movieRepo);
-           
+            // Tildel de modtagne interfaces til felterne
+            _movieRepository = movieRepo;
+            _cinemaRepository = cinemaRepo;
+            _auditoriumRepository = auditoriumRepo;
+            _screeningRepository = screeningRepo;
+
 
             // load data
             Movies = new ReadOnlyObservableCollection<Movie>(

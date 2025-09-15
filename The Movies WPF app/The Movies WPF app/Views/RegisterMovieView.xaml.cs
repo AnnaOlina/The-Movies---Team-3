@@ -21,10 +21,12 @@ namespace The_Movies_WPF_app.Views
     /// </summary>
     public partial class RegisterMovieView : Window
     {
-        public RegisterMovieView()
+        // Modtag ViewModel via DI-containeren
+        public RegisterMovieView(RegisterMovieViewModel viewModel)
         {
             InitializeComponent();
-            DataContext = new RegisterMovieViewModel(new FileMovieRepository("movies.csv"));
+            // Sæt DataContext til det modtagne ViewModel
+            DataContext = viewModel;
         }
     }
 }
