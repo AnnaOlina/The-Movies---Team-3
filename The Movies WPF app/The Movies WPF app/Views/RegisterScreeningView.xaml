@@ -1,6 +1,7 @@
 ﻿<Window x:Class="The_Movies_WPF_app.Views.RegisterScreeningView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local2="clr-namespace:The_Movies_WPF_app.Helpers" 
         Height="450" Width="500"
         SizeToContent="WidthAndHeight"
         ResizeMode="CanMinimize">
